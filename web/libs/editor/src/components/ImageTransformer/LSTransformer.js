@@ -64,8 +64,7 @@ class LSTransformer extends Konva.Transformer {
     const rotateList = this.refreshRotationList();
 
     for (const obj in rotateList) {
-      const rotateButton = new Konva.Circle({
-        radius: 20,
+      const rotateGroup = new Konva.Group({
         name: `rotate-${obj}`,
         dragDistance: 0,
         draggable: true,
@@ -73,20 +72,37 @@ class LSTransformer extends Konva.Transformer {
         y: rotateList[obj].y,
       });
 
-      this.add(rotateButton);
-      rotateButton.moveToBottom(); // to not overlap other controls
+      const rotateButton = new Konva.Circle({
+        radius: 20,
+      });
 
-      rotateButton.on("mousedown touchstart", this.handleMouseDown);
+      const iconImage = new Image();
+      iconImage.src = IconRotate;
+      const icon = new Konva.Image({
+        image: iconImage,
+        width: 16,
+        height: 16,
+        offsetX: 8,
+        offsetY: 8,
+        listening: false,
+      });
 
-      rotateButton.on("mouseover", () => {
+      rotateGroup.add(rotateButton);
+      rotateGroup.add(icon);
+      this.add(rotateGroup);
+      rotateGroup.moveToBottom(); // to not overlap other controls
+
+      rotateGroup.on("mousedown touchstart", this.handleMouseDown);
+
+      rotateGroup.on("mouseover", () => {
         if (!this.isMouseDown) {
-          this.getStage().content.style.cursor = `url(${IconRotate}) 16 16, pointer`;
+          this.getStage().content.style.cursor = "grab";
         }
 
         this.isMouseOver = true;
       });
 
-      rotateButton.on("mouseout", () => {
+      rotateGroup.on("mouseout", () => {
         this.isMouseOver = false;
 
         if (!this.isMouseDown) {
@@ -94,14 +110,14 @@ class LSTransformer extends Konva.Transformer {
         }
       });
 
-      rotateButton.on("dragstart", (e) => {
+      rotateGroup.on("dragstart", (e) => {
         const anchorNode = this.findOne(`.${this._movingAnchorName}`);
 
         anchorNode.stopDrag();
         e.cancelBubble = true;
       });
 
-      rotateButton.on("dragend", (e) => {
+      rotateGroup.on("dragend", (e) => {
         e.cancelBubble = true;
       });
     }
@@ -119,7 +135,7 @@ class LSTransformer extends Konva.Transformer {
     const dy = pp.y - origin.y;
     const azimuth = Math.PI / 2 - Math.atan2(-dy, dx);
 
-    stage.content.style.cursor = `url(${IconRotate}) 16 16, pointer`;
+    stage.content.style.cursor = "grabbing";
     this.isMouseDown = true;
     this._movingAnchorName = e.target.name().split(" ")[0];
 
@@ -145,7 +161,9 @@ class LSTransformer extends Konva.Transformer {
     this.isMouseDown = false;
     this.origin = undefined;
 
-    if (!this.isMouseOver) {
+    if (this.isMouseOver) {
+      this.getStage().content.style.cursor = "grab";
+    } else {
       this.getStage().content.style.cursor = "";
     }
 
