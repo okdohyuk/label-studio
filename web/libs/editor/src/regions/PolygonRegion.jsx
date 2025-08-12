@@ -67,7 +67,7 @@ const Model = types
     _supportsTransform: true,
     useTransformer: true,
     preferTransformer: false,
-    supportsRotate: false,
+    supportsRotate: true,
     supportsScale: true,
   }))
   .views((self) => ({
@@ -420,31 +420,23 @@ const Poly = memo(
             if (e.target !== e.currentTarget) return;
 
             const t = e.target;
-
-            const d = [t.getAttr("x", 0), t.getAttr("y", 0)];
-            const scale = [t.getAttr("scaleX", 1), t.getAttr("scaleY", 1)];
+            const transform = t.getTransform().copy();
             const points = t.getAttr("points");
+            const result = [];
 
-            item.setPoints(
-              points.reduce((result, coord, idx) => {
-                const isXCoord = idx % 2 === 0;
+            for (let i = 0; i < points.length; i += 2) {
+              const { x, y } = transform.point({ x: points[i], y: points[i + 1] });
+              const point = item.control?.getSnappedPoint({
+                x: item.parent.canvasToInternalX(x),
+                y: item.parent.canvasToInternalY(y),
+              });
 
-                if (isXCoord) {
-                  const point = item.control?.getSnappedPoint({
-                    x: item.parent.canvasToInternalX(coord * scale[0] + d[0]),
-                    y: item.parent.canvasToInternalY(points[idx + 1] * scale[1] + d[1]),
-                  });
+              result.push(point.x, point.y);
+            }
 
-                  result.push(point.x, point.y);
-                }
-                return result;
-              }, []),
-            );
+            item.setPoints(result);
 
-            t.setAttr("x", 0);
-            t.setAttr("y", 0);
-            t.setAttr("scaleX", 1);
-            t.setAttr("scaleY", 1);
+            t.setAttrs({ x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, offsetX: 0, offsetY: 0 });
           }}
           draggable={draggable}
         />
