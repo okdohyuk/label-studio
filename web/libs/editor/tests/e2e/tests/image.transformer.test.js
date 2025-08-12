@@ -39,6 +39,7 @@ const shapes = {
     hasTransformer: true,
     hasRotator: true,
     hasMoveToolTransformer: true,
+    hasMoveToolRotator: true,
     hasMultiSelectionTransformer: true,
     hasMultiSelectionRotator: true,
     hotKey: "r",
@@ -54,6 +55,7 @@ const shapes = {
     hasTransformer: true,
     hasRotator: true,
     hasMoveToolTransformer: true,
+    hasMoveToolRotator: true,
     hasMultiSelectionTransformer: true,
     hasMultiSelectionRotator: true,
     hotKey: "o",
@@ -75,8 +77,9 @@ const shapes = {
     hasTransformer: false,
     hasRotator: false,
     hasMoveToolTransformer: true,
+    hasMoveToolRotator: true,
     hasMultiSelectionTransformer: true,
-    hasMultiSelectionRotator: false,
+    hasMultiSelectionRotator: true,
     hotKey: "p",
     byBBox(x, y, width, height) {
       const points = [];
@@ -100,6 +103,7 @@ const shapes = {
     hasTransformer: false,
     hasRotator: false,
     hasMoveToolTransformer: false,
+    hasMoveToolRotator: false,
     hasMultiSelectionTransformer: true,
     hasMultiSelectionRotator: false,
     hotKey: "k",
@@ -184,9 +188,13 @@ Data(shapesTable).Scenario(
     // Switch to move tool
     I.pressKey("v");
 
-    // Match if rotator at transformer exist with expectations in single selected mode with move tool chosen
+    // Match if transformer exist in single selected mode with move tool chosen
     isTransformerExist = await AtImageView.isTransformerExist();
     assert.strictEqual(isTransformerExist, Shape.hasMoveToolTransformer);
+
+    // Match if rotator exist in single selected mode with move tool chosen
+    isTransformerExist = await AtImageView.isRotaterExist();
+    assert.strictEqual(isTransformerExist, Shape.hasMoveToolRotator);
 
     // Deselect the previous selected region
     I.pressKey(["u"]);

@@ -1848,6 +1848,13 @@
         "required": false,
         "default": 3
       },
+      "canRotate": {
+        "name": "canRotate",
+        "description": "Show or hide rotation control",
+        "type": ["true", "false"],
+        "required": false,
+        "default": true
+      },
       "pointSize": {
         "name": "pointSize",
         "description": "Size of polygon handle points",
@@ -1944,6 +1951,13 @@
         "type": "number",
         "required": false,
         "default": 1
+      },
+      "canRotate": {
+        "name": "canRotate",
+        "description": "Show or hide rotation control",
+        "type": ["true", "false"],
+        "required": false,
+        "default": true
       },
       "pointSize": {
         "name": "pointSize",

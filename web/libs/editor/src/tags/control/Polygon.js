@@ -30,6 +30,7 @@ const hotkeys = Hotkey("Polygons");
  * @param {string} [fillColor=transparent]        - Polygon fill color in hexadecimal or HTML color name
  * @param {string} [strokeColor=#f48a42]          - Stroke color in hexadecimal
  * @param {number} [strokeWidth=3]                - Width of stroke
+ * @param {boolean} [canRotate=true]              - Show or hide rotation control
  * @param {small|medium|large} [pointSize=small]  - Size of polygon handle points
  * @param {rectangle|circle} [pointStyle=circle]  - Style of points
  * @param {boolean} [smart]                       - Show smart tool for interactive pre-annotations
@@ -44,6 +45,8 @@ const TagAttrs = types.model({
 
   strokewidth: types.optional(types.string, "2"),
   strokecolor: types.optional(customTypes.color, "#f48a42"),
+
+  canrotate: types.optional(types.boolean, true),
 
   snap: types.optional(types.string, "none"),
 
